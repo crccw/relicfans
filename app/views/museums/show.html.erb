@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @museum.name %>
+</p>
+
+<p>
+  <strong>Home url:</strong>
+  <%= @museum.home_url %>
+</p>
+
+<p>
+  <strong>Exhibit url:</strong>
+  <%= @museum.exhibit_url %>
+</p>
+
+<%= link_to 'Edit', edit_museum_path(@museum) %> |
+<%= link_to 'Back', museums_path %>

@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Exhibits</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Start at</th>
+      <th>End at</th>
+      <th>Url</th>
+      <th>Belongs to</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @exhibits.each do |exhibit| %>
+      <tr>
+        <td><%= exhibit.name %></td>
+        <td><%= exhibit.start_at %></td>
+        <td><%= exhibit.end_at %></td>
+        <td><%= exhibit.url %></td>
+        <td><%= exhibit.belongs_to %></td>
+        <td><%= link_to 'Show', exhibit %></td>
+        <td><%= link_to 'Edit', edit_exhibit_path(exhibit) %></td>
+        <td><%= link_to 'Destroy', exhibit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Exhibit', new_exhibit_path %>
