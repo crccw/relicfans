@@ -27,12 +27,14 @@ class MessagesController < ApplicationController
 
     coming_in = Hash.from_xml(request.raw_post)["xml"].map{ |k,v|
       {k.underscore => v}}.reduce(:merge);
-    coming_in[:create_time] = Time.at coming_in[:create_time]
+    coming_in["create_time"] = Time.at coming_in["create_time"].to_i
 
     logger.debug "Msg parsed: #{coming_in.to_s}"
 
-    @message = Message.new(filter_params coming_in)
-    @message.save unless Message.where(msg_id: @message.msg_id).count > 0
+    @in_message = Message.new(filter_params coming_in)
+    @in_message.save unless Message.where(msg_id: @in_message.msg_id).count > 0
+
+    handle @in_message
 
     render "msg_text", format: :xml
   end
@@ -69,7 +71,23 @@ class MessagesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def filter_params hsh
-      hsh.permit(:msg_id, :to_user_name, :from_user_name, 
-                 :create_time, :msg_type, :content)
+      hsh.slice("msg_id", "to_user_name", "from_user_name", 
+                 "create_time", "msg_type", "content")
+    end
+
+    # Handle messages
+    def handle message
+      @reply = Message.new to_user_name: message.from_user_name,
+          from_user_name: message.to_user_name,
+          create_time: Time.now
+      message.content = message.content.strip
+      if message.content == "展览"
+        @exhibits = Exhibit.where("start_at < ?",1.week.since).
+                            where("end_at > ?",Time.now)
+      elsif @museum = Museum.where(museum: message.content)
+        @exhibits = Museum.exhibits.where("start_at < ?",1.week.since).
+                                    where("end_at > ?",Time.now)
+      end
+      @reply.content = @exhibits.map(&:to_s).join("\n")
     end
 end
