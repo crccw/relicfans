@@ -46,5 +46,6 @@ group :development, :test do
   gem 'spring'
 
   gem 'capistrano'
+  gem 'sepastian-capistrano3-unicorn', :require => false
 end
 
