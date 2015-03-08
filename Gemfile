@@ -3,6 +3,8 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
+# Use dotenv to manage environment variables, load at first
+gem 'dotenv-rails', :require => 'dotenv/rails-now'
 # Use mysql2 as the database for Active Record
 gem 'mysql2'
 # Use SCSS for stylesheets
@@ -31,9 +33,6 @@ gem "bower-rails"
 
 # Use Unicorn as the app server
 gem 'unicorn'
-
-# Use dotenv to manage environment variables
-gem 'dotenv-rails'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
