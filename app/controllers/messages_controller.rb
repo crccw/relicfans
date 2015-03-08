@@ -32,7 +32,7 @@ class MessagesController < ApplicationController
     logger.debug "Msg parsed: #{coming_in.to_s}"
 
     @message = Message.new(coming_in)
-    @message.save unless Message.count(msg_id: @message.msg_id)>0
+    @message.save unless Message.where(msg_id: @message.msg_id).count > 0
 
     render "msg_text", format: :xml
   end
