@@ -32,6 +32,9 @@ gem "bower-rails"
 # Use Unicorn as the app server
 gem 'unicorn'
 
+# Use dotenv to manage environment variables
+gem 'dotenv-rails'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -46,10 +49,10 @@ group :development, :test do
   gem 'spring'
 
   gem 'capistrano'
+  gem 'capistrano-rvm'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'capistrano3-unicorn'
-  gem 'rvm1-capistrano3'
 
 end
 
