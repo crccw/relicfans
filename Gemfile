@@ -46,6 +46,10 @@ group :development, :test do
   gem 'spring'
 
   gem 'capistrano'
-  gem 'sepastian-capistrano3-unicorn', :require => false
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
+  gem 'capistrano3-unicorn'
+  gem 'rvm1-capistrano3'
+
 end
 
