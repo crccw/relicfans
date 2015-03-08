@@ -17,3 +17,4 @@
 
 # Database config
 /config/database.yml
+/config/relicfans.yml
