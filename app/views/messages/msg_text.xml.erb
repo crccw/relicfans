@@ -1,7 +1,7 @@
 <xml>
 <ToUserName><![CDATA[<%= @reply.from_user_name %>]]></ToUserName>
 <FromUserName><![CDATA[<%= @reply.to_user_name %>]]></FromUserName> 
-<CreateTime><%= @reply.create_time %></CreateTime>
+<CreateTime><%= @reply.create_time.to_i %></CreateTime>
 <MsgType><![CDATA[text]]></MsgType>
 <Content><![CDATA[<%= @reply.content %>]]></Content>
 </xml>
