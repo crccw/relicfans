@@ -5,7 +5,7 @@ require 'capistrano/setup'
 require 'capistrano/deploy'
 
 # To deal with Unicorn
-require 'capistrano/unicorn'
+require 'capistrano3/unicorn'
 require 'rvm1/capistrano3'
 require 'capistrano/rails'
 
