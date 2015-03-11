@@ -84,7 +84,7 @@ class MessagesController < ApplicationController
       if message.content == "展览"
         museums = Museum.all
       else
-        museums = Museum.find_by(name: message.content)
+        museums = [Museum.find_by(name: message.content)]
       end
 
       @reply.content = ""
