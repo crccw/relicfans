@@ -82,12 +82,20 @@ class MessagesController < ApplicationController
           create_time: Time.now
       message.content = message.content.strip
       if message.content == "展览"
-        @exhibits = Exhibit.where("start_at < ?",1.week.since).
-                            where("end_at > ?",Time.now)
-      elsif @museum = Museum.find_by(name: message.content)
-        @exhibits = @museum.exhibits.where("start_at < ?",1.week.since).
-                                     where("end_at > ?",Time.now)
+        museums = Museum.all
+      else
+        museums = Museum.find_by(name: message.content)
       end
-      @reply.content = @exhibits.map(&:to_s).join("\n")
+
+      if museums
+        museums.each do |museum|
+          exhibits = museum.exhibits.where("start_at < ?",1.week.since).
+                                     where("end_at > ?",Time.now)
+          @reply.content += "#{museum.name}：\n" +
+                            exhibits.map(&:to_s).join("\n")
+        end
+      else
+        @reply.content = "听不懂><"
+      end
     end
 end
