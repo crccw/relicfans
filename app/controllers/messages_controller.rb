@@ -95,7 +95,7 @@ class MessagesController < ApplicationController
                             exhibits.map(&:to_s).join("\n")
         end
       else
-        @reply.content = "听不懂><"
+        @reply.content = "听不懂0 0"
       end
     end
 end
