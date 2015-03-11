@@ -87,6 +87,7 @@ class MessagesController < ApplicationController
         museums = Museum.find_by(name: message.content)
       end
 
+      @reply.content = ""
       if museums
         museums.each do |museum|
           exhibits = museum.exhibits.where("start_at < ?",1.week.since).
