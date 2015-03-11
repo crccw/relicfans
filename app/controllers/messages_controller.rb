@@ -84,9 +84,9 @@ class MessagesController < ApplicationController
       if message.content == "展览"
         @exhibits = Exhibit.where("start_at < ?",1.week.since).
                             where("end_at > ?",Time.now)
-      elsif @museum = Museum.where(museum: message.content)
-        @exhibits = Museum.exhibits.where("start_at < ?",1.week.since).
-                                    where("end_at > ?",Time.now)
+      elsif @museum = Museum.find_by(name: message.content)
+        @exhibits = @museum.exhibits.where("start_at < ?",1.week.since).
+                                     where("end_at > ?",Time.now)
       end
       @reply.content = @exhibits.map(&:to_s).join("\n")
     end

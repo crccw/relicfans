@@ -37,11 +37,15 @@ ActiveRecord::Schema.define(version: 20150308120800) do
   add_index "messages", ["msg_id"], name: "index_messages_on_msg_id", unique: true, using: :btree
 
   create_table "museums", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.string   "home_url",    limit: 255
-    t.string   "exhibit_url", limit: 255
+    t.string   "name",        limit: 255, null: false
+    t.string   "flag",        limit: 255, null: false
+    t.string   "home_url",    limit: 255, null: false
+    t.string   "exhibit_url", limit: 255, null: false
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
   end
+
+  add_index "museums", ["flag"], name: "index_museums_on_flag", unique: true, using: :btree
+  add_index "museums", ["name"], name: "index_museums_on_name", unique: true, using: :btree
 
 end

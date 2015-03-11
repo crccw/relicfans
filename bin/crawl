@@ -1,0 +1,87 @@
+#!/usr/bin/env ruby
+
+APP_PATH = File.expand_path('../../config/application',  __FILE__)
+require File.expand_path('../../config/boot',  __FILE__)
+require APP_PATH
+# set Rails.env here if desired
+Rails.application.require_environment!
+# To work with remote files
+require 'open-uri'
+include ActionView::Helpers::SanitizeHelper
+
+def usage
+  abort "usage: crawl [MUSEUM]"
+end
+
+def clean_text(text)
+  nbsp = Nokogiri::HTML("&nbsp;").text
+  strip_tags text.gsub(nbsp,"").strip
+end
+
+def crawl(options)
+  html = open options[:url]
+  if options[:encode] != "UTF-8"
+    ec = Encoding::Converter.new options[:encode], "UTF-8"
+    html = ec.convert html
+  end
+  doc = Nokogiri::HTML html
+  content = doc.at_css options[:dom][:content]
+  entries = []
+  content.css(options[:dom][:entry]).each do |row|
+    attrs = {}
+    ["name", "location", "start_at", "end_at"].each do |attr|
+      # default
+      options[("before_" + attr).to_sym] ||= lambda { |v| v }
+      attrs[attr] = options[("before_" + attr).to_sym].call(
+        clean_text row.at_css(options[:dom][attr.to_sym]).inner_html
+      )
+    end
+    entries << Exhibit.new(attrs)
+  end
+  return entries
+end
+
+def crawl_dpm(museum)
+  crawl(
+    url: "http://www.dpm.org.cn/shtml/34/@/3947.html",
+    encode: "UTF-8",
+    dom: {
+      content: "table.txt5",
+      entry: "tr",
+      name: "td[2]",
+      location: "td[3] span",
+      start_at: "td[4] span",
+      end_at: "td[4] span"
+    },
+    before_start_at: lambda { |start_at|
+      start_at = start_at.split('-').first
+      if start_at["常设展览"].nil?
+        return Date.parse start_at
+      else
+        return nil
+      end
+    },
+    before_end_at: lambda { |end_at|
+      end_at = end_at.split('-').last
+      if end_at["常设展览"].nil?
+        return Date.parse end_at
+      else
+        return nil
+      end
+    }
+  ).each do |exhibit|
+    next if Exhibit.where(museum: museum, name: exhibit.name).count > 0
+    exhibit.museum = museum
+    exhibit.save
+  end
+end
+
+Museum.all.each do |museum|
+  puts "Crawling #{museum.name}"
+  crawler = "crawl_" + museum.flag
+  send "crawl_dpm",museum
+  if respond_to? crawler
+  else
+    puts "Crawler missed: #{crawler}"
+  end
+end
